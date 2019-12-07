@@ -1,2 +1,7 @@
 .idea
 funSockets.iml
+/JavaApplication5/nbproject/private/
+/build/
+nbproject
+build.xml
+manifest.mf

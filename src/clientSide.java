@@ -2,7 +2,7 @@ import java.net.*;
 import java.io.*;
 import java.util.Scanner;
 
-public class clientSide {
+public class clientSide{
     private String hostname;
     private int port;
     private String userName;
@@ -39,6 +39,7 @@ public class clientSide {
 
 
     public static void main(String[] args) {
+        /*
         Scanner input = new Scanner(System.in);
 
         System.out.println("Please input server ip:");
@@ -49,5 +50,8 @@ public class clientSide {
 
         clientSide client = new clientSide(hostName, port);
         client.execute();
+        */
+        clientApplication client = new clientApplication();
+        client.startUp(args);
     }
 }
