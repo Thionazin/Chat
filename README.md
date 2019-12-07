@@ -1,2 +1,2 @@
 # Chat
-A chat application.
+A chat application. Currently is a mess.
