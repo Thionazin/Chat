@@ -13,6 +13,7 @@ public class clientSide{
     }
 
     public void execute() {
+        /*
         try {
             Socket socket = new Socket(hostname, port);
 
@@ -26,7 +27,7 @@ public class clientSide{
         } catch (IOException ex) {
             System.out.println("I/O Error: " + ex.getMessage());
         }
-
+           */
     }
 
     void setUserName(String userName) {

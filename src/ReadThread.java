@@ -4,9 +4,9 @@ import java.net.*;
 public class ReadThread extends Thread{
     private BufferedReader reader;
     private Socket socket;
-    private clientSide client;
+    private clientApplication client;
 
-    public ReadThread(Socket socket, clientSide client) {
+    public ReadThread(Socket socket, clientApplication client) {
         this.socket = socket;
         this.client = client;
 

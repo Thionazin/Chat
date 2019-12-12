@@ -9,15 +9,22 @@
  * @author wywang
  */
 import java.awt.Insets;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -28,6 +35,13 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class clientApplication extends Application {
+    
+    private String address;
+    private int portNumber;
+    private String userId;
+    
+    public ObservableList<String> messageList;
+    
     public void startUp(String[] args) {
         launch(args);
     }
@@ -92,7 +106,12 @@ public class clientApplication extends Application {
                     actiontarget.setText("");
                     try 
                     {
-                        String[] a = new String[1];
+                        setMainScreen();
+                        loginStage.close();
+                        address = ipBox.getText();
+                        portNumber = Integer.parseInt(portBox.getText());
+                        userId = userBox.getText();
+                        
                     } catch (Exception e) 
                     {
                         actiontarget.setFill(Color.FIREBRICK);
@@ -108,6 +127,57 @@ public class clientApplication extends Application {
     }
     
     public void setMainScreen () {
+        Stage mainStage = new Stage();
+        
+        mainStage.setTitle("Bungle Chat v0.0.1");
+        
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        Scene scene = new Scene(grid, 800, 450);
+        connect(address, portNumber);
+        System.out.println("Hello!");
+        messageList = FXCollections.<String>observableArrayList("Yes", "No");
+        ListView<String> messages = new ListView<String>(messageList);
+        messages.setOrientation(Orientation.VERTICAL);
+        messages.setPrefSize((scene.getWidth()*9)/10, (scene.getHeight()*8)/10);
+        grid.getChildren().add(messages);
+        
+        
+        mainStage.setScene(scene);
+        mainStage.show();
+    }
     
+    public void connect(String hostname, int port) {
+        try {
+            Socket socket = new Socket(hostname, port);
+
+            System.out.println("Connected to the chat server");
+
+            new ReadThread(socket, this).start();
+            new WriteThread(socket, this).start();
+
+        } catch (UnknownHostException ex) {
+            System.out.println("Server not found: " + ex.getMessage());
+        } catch (IOException ex) {
+            System.out.println("I/O Error: " + ex.getMessage());
+        }
+
+    }
+    
+    public String getUserName()
+    {
+        return userId;
+    }
+    
+    public void setUserName(String username)
+    {
+        userId = username;
+    }
+    
+    public void addMessage(String message)
+    {
+        
     }
 }

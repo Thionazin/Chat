@@ -4,9 +4,9 @@ import java.net.*;
 public class WriteThread extends Thread {
     private PrintWriter writer;
     private Socket socket;
-    private clientSide client;
+    private clientApplication client;
 
-    public WriteThread(Socket socket, clientSide client) {
+    public WriteThread(Socket socket, clientApplication client) {
         this.socket = socket;
         this.client = client;
 
