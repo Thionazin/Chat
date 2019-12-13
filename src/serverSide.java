@@ -65,7 +65,7 @@ public class serverSide{
     }
 
     /**
-     * When a client is disconneted, removes the associated username and UserThread
+     * When a client is disconnected, removes the associated username and UserThread
      */
     void removeUser(String userName, userThread aUser) {
         boolean removed = userNames.remove(userName);

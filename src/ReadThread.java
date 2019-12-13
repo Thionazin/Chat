@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import javafx.application.Platform;
 
 public class ReadThread extends Thread{
     private BufferedReader reader;
@@ -23,14 +24,14 @@ public class ReadThread extends Thread{
         while (true) {
             try {
                 String response = reader.readLine();
-                System.out.println(response);
+                client.addMessage(response);
 
                 // prints the username after displaying the server's message
                 if (client.getUserName() != null) {
                     //System.out.print("[" + client.getUserName() + "]: ");
                 }
             } catch (IOException ex) {
-                System.out.println("Error reading from server: " + ex.getMessage());
+                client.addMessage("Error reading from server: " + ex.getMessage());
                 ex.printStackTrace();
                 break;
             }

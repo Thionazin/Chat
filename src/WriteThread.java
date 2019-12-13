@@ -5,10 +5,12 @@ public class WriteThread extends Thread {
     private PrintWriter writer;
     private Socket socket;
     private clientApplication client;
+    private String userName;
 
-    public WriteThread(Socket socket, clientApplication client) {
+    public WriteThread(Socket socket, clientApplication client, String username) {
         this.socket = socket;
         this.client = client;
+        userName = username;
 
         try {
             OutputStream output = socket.getOutputStream();
@@ -21,18 +23,18 @@ public class WriteThread extends Thread {
 
     public void run() {
 
-        Console console = System.console();
+        //Console console = System.console();
 
-        String userName = console.readLine("\nEnter your name: ");
-        client.setUserName(userName);
+        //String userName = console.readLine("\nEnter your name: ");
+        //client.setUserName(userName);
         writer.println(userName);
 
-        String text;
-
+        //String text;
+        /*
         do {
             //text = console.readLine("[" + userName + "]: ");
-            text = console.readLine();
-            writer.println(text);
+            //text = console.readLine();
+            //writer.println(text);
 
         } while (!text.equals("bye"));
 
@@ -42,5 +44,12 @@ public class WriteThread extends Thread {
 
             System.out.println("Error writing to server: " + ex.getMessage());
         }
+*/
+
+    }
+    
+    public void sendMessage(String mess)
+    {
+        writer.println(mess);
     }
 }

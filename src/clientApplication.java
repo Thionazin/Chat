@@ -40,6 +40,9 @@ public class clientApplication extends Application {
     private int portNumber;
     private String userId;
     
+    private ReadThread reader;
+    private WriteThread writer;
+    
     public ObservableList<String> messageList;
     
     public void startUp(String[] args) {
@@ -96,6 +99,8 @@ public class clientApplication extends Application {
  
             @Override
             public void handle(ActionEvent event) {
+                System.out.println(ipBox.getText());
+                System.out.println(portBox.getText());
                 if(ipBox.getText().equals("") || portBox.getText().equals("") || userBox.getText().equals(""))
                 {
                     actiontarget.setFill(Color.FIREBRICK);
@@ -106,11 +111,12 @@ public class clientApplication extends Application {
                     actiontarget.setText("");
                     try 
                     {
-                        setMainScreen();
-                        loginStage.close();
                         address = ipBox.getText();
                         portNumber = Integer.parseInt(portBox.getText());
                         userId = userBox.getText();
+                        System.out.println("Stage one finished");
+                        setMainScreen();
+                        loginStage.close();
                         
                     } catch (Exception e) 
                     {
@@ -129,7 +135,7 @@ public class clientApplication extends Application {
     public void setMainScreen () {
         Stage mainStage = new Stage();
         
-        mainStage.setTitle("Bungle Chat v0.0.1");
+        mainStage.setTitle("Bungle Chat v1.0.0");
         
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -138,25 +144,53 @@ public class clientApplication extends Application {
         Scene scene = new Scene(grid, 800, 450);
         connect(address, portNumber);
         System.out.println("Hello!");
-        messageList = FXCollections.<String>observableArrayList("Yes", "No");
+        messageList = FXCollections.<String>observableArrayList();
         ListView<String> messages = new ListView<String>(messageList);
         messages.setOrientation(Orientation.VERTICAL);
         messages.setPrefSize((scene.getWidth()*9)/10, (scene.getHeight()*8)/10);
-        grid.getChildren().add(messages);
+        grid.add(messages, 0, 0);
+        TextField textBox = new TextField();
+        grid.add(textBox, 0, 1);
         
+        Button send = new Button();
+        send.setText("Send Message");
+        grid.add(send, 0, 2);
+        
+        
+        
+        send.setOnAction(new EventHandler<ActionEvent>() {
+ 
+            @Override
+            public void handle(ActionEvent event) {
+                if(textBox.getText().equals(""))
+                {
+                    
+                }
+                else
+                {
+                    writer.sendMessage(textBox.getText());
+                    messageList.add("[You]: " + textBox.getText());
+                    textBox.setText("");
+                }
+            }
+        });
         
         mainStage.setScene(scene);
         mainStage.show();
     }
     
     public void connect(String hostname, int port) {
+        System.out.println(address);
+        System.out.println(portNumber);
         try {
-            Socket socket = new Socket(hostname, port);
+            Socket socket = new Socket(address, portNumber);
 
             System.out.println("Connected to the chat server");
 
-            new ReadThread(socket, this).start();
-            new WriteThread(socket, this).start();
+            reader = new ReadThread(socket, this);
+            writer = new WriteThread(socket, this, userId);
+            reader.start();
+            writer.start();
 
         } catch (UnknownHostException ex) {
             System.out.println("Server not found: " + ex.getMessage());
@@ -178,6 +212,12 @@ public class clientApplication extends Application {
     
     public void addMessage(String message)
     {
-        
+        messageList.add(message);
+    }
+    
+    @Override
+    public void stop() throws Exception {
+        super.stop(); //To change body of generated methods, choose Tools | Templates.
+        System.exit(0);
     }
 }

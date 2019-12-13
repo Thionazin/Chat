@@ -12,7 +12,7 @@ public class clientSide{
         this.port = port;
     }
 
-    public void execute() {
+    public void execute(String ip, int portNumber) {
         /*
         try {
             Socket socket = new Socket(hostname, port);
